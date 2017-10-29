@@ -1,0 +1,9 @@
+/* 
+  Localizable.strings
+  TwitClient
+
+  Created by Ruslan Nikolaev on 29/10/2017.
+  Copyright © 2017 Ruslan Nikolaev. All rights reserved.
+*/
+
+"web.parsing.error"="We have a problem, try again later";

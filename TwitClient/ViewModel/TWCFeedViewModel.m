@@ -29,7 +29,10 @@
 
 -(void) fetchFeed
 {
-    [self.feedService fetchFeedWithCompletion:^(int i) {
+    [self.feedService fetchFeedWithCompletion:^(NSArray<TWCPostItem *> *posts) {
+       
+        
+    } failure:^(NSString *reason) {
         
     }];
 }

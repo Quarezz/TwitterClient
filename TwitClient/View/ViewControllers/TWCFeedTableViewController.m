@@ -39,6 +39,7 @@
 -(void) refreshTriggered
 {
     [self.viewModel fetchFeed];
+    [self.refreshControl endRefreshing];
 }
 
 #pragma mark - Table view data source

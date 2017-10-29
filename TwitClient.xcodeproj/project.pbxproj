@@ -18,6 +18,8 @@
 		2E5C1F671FA604AE00A49370 /* TWCFeedViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F661FA604AE00A49370 /* TWCFeedViewModel.m */; };
 		2E5C1F6B1FA6057800A49370 /* TWCTwitterFeedService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F6A1FA6057800A49370 /* TWCTwitterFeedService.m */; };
 		2E5C1F6F1FA60D8300A49370 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E5C1F6E1FA60D8300A49370 /* LaunchScreen.storyboard */; };
+		2E5C1F721FA6142100A49370 /* TWCPostItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F711FA6142100A49370 /* TWCPostItem.m */; };
+		2E5C1F751FA61D2A00A49370 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E5C1F771FA61D2A00A49370 /* Localizable.strings */; };
 		BFD8A796C5E69FF2B3D3511A /* Pods_TwitClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7ABA70EE1D1F23014E8BC8 /* Pods_TwitClient.framework */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +58,9 @@
 		2E5C1F6A1FA6057800A49370 /* TWCTwitterFeedService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TWCTwitterFeedService.m; sourceTree = "<group>"; };
 		2E5C1F6C1FA6058900A49370 /* TWCTwitterFeedServiceInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TWCTwitterFeedServiceInterface.h; sourceTree = "<group>"; };
 		2E5C1F6E1FA60D8300A49370 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		2E5C1F701FA6142100A49370 /* TWCPostItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TWCPostItem.h; sourceTree = "<group>"; };
+		2E5C1F711FA6142100A49370 /* TWCPostItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TWCPostItem.m; sourceTree = "<group>"; };
+		2E5C1F761FA61D2A00A49370 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F10D36181123F4AD778A68FD /* Pods-TwitClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwitClient/Pods-TwitClient.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -141,6 +146,8 @@
 		2E5C1F471FA602E700A49370 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				2E5C1F701FA6142100A49370 /* TWCPostItem.h */,
+				2E5C1F711FA6142100A49370 /* TWCPostItem.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -152,6 +159,7 @@
 				2E5C1F4A1FA602E700A49370 /* TwitterClient-Bridging-Header.h */,
 				2E5C1F4B1FA602E700A49370 /* Xib */,
 				2E5C1F6E1FA60D8300A49370 /* LaunchScreen.storyboard */,
+				2E5C1F771FA61D2A00A49370 /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -323,6 +331,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E5C1F6F1FA60D8300A49370 /* LaunchScreen.storyboard in Resources */,
+				2E5C1F751FA61D2A00A49370 /* Localizable.strings in Resources */,
 				2E5C1F5B1FA602E800A49370 /* Assets.xcassets in Resources */,
 				2E5C1F5C1FA602E800A49370 /* TweetPostCell.xib in Resources */,
 			);
@@ -402,6 +411,7 @@
 				2E5C1F601FA602E800A49370 /* TWCFeedTableViewController.m in Sources */,
 				2E5C1F671FA604AE00A49370 /* TWCFeedViewModel.m in Sources */,
 				2E5C1F6B1FA6057800A49370 /* TWCTwitterFeedService.m in Sources */,
+				2E5C1F721FA6142100A49370 /* TWCPostItem.m in Sources */,
 				2E5C1F5E1FA602E800A49370 /* TWCAppDelegate.m in Sources */,
 				2E5C1F5D1FA602E800A49370 /* main.m in Sources */,
 				2E5C1F5A1FA602E800A49370 /* TwitClient.xcdatamodeld in Sources */,
@@ -426,6 +436,17 @@
 			targetProxy = 2E5C1F351FA6028C00A49370 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		2E5C1F771FA61D2A00A49370 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2E5C1F761FA61D2A00A49370 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		2E5C1F3B1FA6028C00A49370 /* Debug */ = {

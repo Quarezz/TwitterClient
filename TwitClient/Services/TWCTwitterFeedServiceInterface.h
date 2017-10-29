@@ -6,10 +6,14 @@
 //  Copyright © 2017 Ruslan Nikolaev. All rights reserved.
 //
 
-typedef void (^FeedResult)(int i);
+@class TWCPostItem;
+
+typedef void (^FeedCompletion)(NSArray<TWCPostItem *> *posts);
+typedef void (^FeedFailure)(NSString *reason);
 
 @protocol TWCTwitterFeedServiceInterface
 
--(void) fetchFeedWithCompletion: (FeedResult) completion;
+-(void) fetchFeedWithCompletion: (FeedCompletion) completion failure: (FeedFailure) failure;
+-(void) loadMoreWithLastID: (NSString *) lastItemId completion: (FeedCompletion) completion failure: (FeedFailure) failure;
 
 @end
