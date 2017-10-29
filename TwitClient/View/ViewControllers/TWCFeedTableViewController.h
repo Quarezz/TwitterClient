@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class TWCFeedViewModel;
+
 @interface TWCFeedTableViewController : UITableViewController
+
+-(void) bindModel: (TWCFeedViewModel *) viewModel;
 
 @end

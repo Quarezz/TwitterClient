@@ -14,8 +14,10 @@
 		2E5C1F5D1FA602E800A49370 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F4E1FA602E700A49370 /* main.m */; };
 		2E5C1F5E1FA602E800A49370 /* TWCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F501FA602E700A49370 /* TWCAppDelegate.m */; };
 		2E5C1F601FA602E800A49370 /* TWCFeedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F561FA602E700A49370 /* TWCFeedTableViewController.m */; };
-		2E5C1F611FA602E800A49370 /* FeedViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F591FA602E800A49370 /* FeedViewModel.m */; };
 		2E5C1F641FA6031600A49370 /* TWCPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F631FA6031600A49370 /* TWCPostCell.m */; };
+		2E5C1F671FA604AE00A49370 /* TWCFeedViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F661FA604AE00A49370 /* TWCFeedViewModel.m */; };
+		2E5C1F6B1FA6057800A49370 /* TWCTwitterFeedService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F6A1FA6057800A49370 /* TWCTwitterFeedService.m */; };
+		2E5C1F6F1FA60D8300A49370 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E5C1F6E1FA60D8300A49370 /* LaunchScreen.storyboard */; };
 		BFD8A796C5E69FF2B3D3511A /* Pods_TwitClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7ABA70EE1D1F23014E8BC8 /* Pods_TwitClient.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,10 +48,14 @@
 		2E5C1F501FA602E700A49370 /* TWCAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TWCAppDelegate.m; sourceTree = "<group>"; };
 		2E5C1F551FA602E700A49370 /* TWCFeedTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TWCFeedTableViewController.h; sourceTree = "<group>"; };
 		2E5C1F561FA602E700A49370 /* TWCFeedTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TWCFeedTableViewController.m; sourceTree = "<group>"; };
-		2E5C1F581FA602E800A49370 /* FeedViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedViewModel.h; sourceTree = "<group>"; };
-		2E5C1F591FA602E800A49370 /* FeedViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedViewModel.m; sourceTree = "<group>"; };
 		2E5C1F621FA6031600A49370 /* TWCPostCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TWCPostCell.h; sourceTree = "<group>"; };
 		2E5C1F631FA6031600A49370 /* TWCPostCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TWCPostCell.m; sourceTree = "<group>"; };
+		2E5C1F651FA604AE00A49370 /* TWCFeedViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TWCFeedViewModel.h; sourceTree = "<group>"; };
+		2E5C1F661FA604AE00A49370 /* TWCFeedViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TWCFeedViewModel.m; sourceTree = "<group>"; };
+		2E5C1F691FA6057800A49370 /* TWCTwitterFeedService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TWCTwitterFeedService.h; sourceTree = "<group>"; };
+		2E5C1F6A1FA6057800A49370 /* TWCTwitterFeedService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TWCTwitterFeedService.m; sourceTree = "<group>"; };
+		2E5C1F6C1FA6058900A49370 /* TWCTwitterFeedServiceInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TWCTwitterFeedServiceInterface.h; sourceTree = "<group>"; };
+		2E5C1F6E1FA60D8300A49370 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F10D36181123F4AD778A68FD /* Pods-TwitClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwitClient/Pods-TwitClient.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -95,6 +101,7 @@
 		2E5C1F1B1FA6028C00A49370 /* TwitClient */ = {
 			isa = PBXGroup;
 			children = (
+				2E5C1F681FA6056200A49370 /* Services */,
 				2E5C1F4D1FA602E700A49370 /* Core */,
 				2E5C1F471FA602E700A49370 /* Models */,
 				2E5C1F431FA602E700A49370 /* Network */,
@@ -144,6 +151,7 @@
 				2E5C1F491FA602E700A49370 /* Assets.xcassets */,
 				2E5C1F4A1FA602E700A49370 /* TwitterClient-Bridging-Header.h */,
 				2E5C1F4B1FA602E700A49370 /* Xib */,
+				2E5C1F6E1FA60D8300A49370 /* LaunchScreen.storyboard */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -196,10 +204,20 @@
 		2E5C1F571FA602E800A49370 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				2E5C1F581FA602E800A49370 /* FeedViewModel.h */,
-				2E5C1F591FA602E800A49370 /* FeedViewModel.m */,
+				2E5C1F651FA604AE00A49370 /* TWCFeedViewModel.h */,
+				2E5C1F661FA604AE00A49370 /* TWCFeedViewModel.m */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		2E5C1F681FA6056200A49370 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				2E5C1F691FA6057800A49370 /* TWCTwitterFeedService.h */,
+				2E5C1F6A1FA6057800A49370 /* TWCTwitterFeedService.m */,
+				2E5C1F6C1FA6058900A49370 /* TWCTwitterFeedServiceInterface.h */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		346D095C4A905606E6B7AC4B /* Pods */ = {
@@ -304,6 +322,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E5C1F6F1FA60D8300A49370 /* LaunchScreen.storyboard in Resources */,
 				2E5C1F5B1FA602E800A49370 /* Assets.xcassets in Resources */,
 				2E5C1F5C1FA602E800A49370 /* TweetPostCell.xib in Resources */,
 			);
@@ -361,9 +380,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-TwitClient/Pods-TwitClient-resources.sh",
+				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/Versions/A/Resources/TwitterKitResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -378,8 +400,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E5C1F601FA602E800A49370 /* TWCFeedTableViewController.m in Sources */,
+				2E5C1F671FA604AE00A49370 /* TWCFeedViewModel.m in Sources */,
+				2E5C1F6B1FA6057800A49370 /* TWCTwitterFeedService.m in Sources */,
 				2E5C1F5E1FA602E800A49370 /* TWCAppDelegate.m in Sources */,
-				2E5C1F611FA602E800A49370 /* FeedViewModel.m in Sources */,
 				2E5C1F5D1FA602E800A49370 /* main.m in Sources */,
 				2E5C1F5A1FA602E800A49370 /* TwitClient.xcdatamodeld in Sources */,
 				2E5C1F641FA6031600A49370 /* TWCPostCell.m in Sources */,
@@ -521,7 +544,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweet.TwitClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -537,7 +560,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweet.TwitClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
