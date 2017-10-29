@@ -8,11 +8,21 @@
 
 #import <Foundation/Foundation.h>
 #import "TWCTwitterFeedServiceInterface.h"
+#import "TWCTwitterSessionServiceInterface.h"
+
+@class RACSignal;
+@class RACCommand;
 
 @interface TWCFeedViewModel : NSObject
 
--(id) initWithFeedService: (id<TWCTwitterFeedServiceInterface>) service;
+@property (nonatomic, strong) TWCUser *user;
+@property (nonatomic, strong) NSMutableArray<TWCPostItem *> *feed;
 
--(void) fetchFeed;
+@property (nonatomic, strong) RACCommand *refreshCommand;
+@property (nonatomic, strong) RACCommand *loadMoreCommand;
+
+-(id) initWithSessionService: (id<TWCTwitterSessionServiceInterface>) sessionService
+                 feedService: (id<TWCTwitterFeedServiceInterface>) feedService;
+
 
 @end

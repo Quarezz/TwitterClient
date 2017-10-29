@@ -21,49 +21,37 @@ static NSString *kPageLimit = @"20";
 
 -(void) fetchFeedWithCompletion:(FeedCompletion)completion failure:(FeedFailure)failure
 {
-    __weak typeof(self) weakSelf = self;
-    [[Twitter sharedInstance] logInWithCompletion:^(TWTRSession * _Nullable session, NSError * _Nullable error) {
-        
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (error != nil)
-        {
-            failure(error.localizedDescription);
-        }
-        else
-        {
-            NSURLRequest *request = [[TWTRAPIClient clientWithCurrentUser] URLRequestWithMethod:@"GET"
-                                                                                            URL:kFeedUrl
-                                                                                     parameters:@{
-                                                                                                  @"count": kPageLimit
-                                                                                                  }
-                                                                                          error:nil];
-            [strongSelf sendTwitterRequest:request completion:completion failure:failure];
-        }
-    }];
+    NSError *requestError = nil;
+    NSURLRequest *request = [[TWTRAPIClient clientWithCurrentUser] URLRequestWithMethod:@"GET"
+                                                                                    URL:kFeedUrl
+                                                                             parameters:@{
+                                                                                          @"count": kPageLimit
+                                                                                          }
+                                                                                  error:&requestError];
+    if (requestError != nil)
+    {
+        failure(requestError.localizedDescription);
+        return;
+    }
+    [self sendTwitterRequest:request completion:completion failure:failure];
 }
 
 -(void) loadMoreWithLastID:(NSString *) lastItemId completion:(FeedCompletion)completion failure:(FeedFailure)failure
 {
-    __weak typeof(self) weakSelf = self;
-    [[Twitter sharedInstance] logInWithCompletion:^(TWTRSession * _Nullable session, NSError * _Nullable error) {
-        
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        if (error != nil)
-        {
-            failure(error.localizedDescription);
-        }
-        else
-        {
-            NSURLRequest *request = [[TWTRAPIClient clientWithCurrentUser] URLRequestWithMethod:@"GET"
+    NSError *requestError = nil;
+    NSURLRequest *request = [[TWTRAPIClient clientWithCurrentUser] URLRequestWithMethod:@"GET"
                                                                                             URL:kFeedUrl
                                                                                      parameters:@{
                                                                                                   @"count": kPageLimit,
                                                                                                   @"since_id": lastItemId
                                                                                                   }
-                                                                                          error:nil];
-            [strongSelf sendTwitterRequest:request completion:completion failure:failure];
-        }
-    }];
+                                                                                          error:&requestError];
+    if (requestError != nil)
+    {
+        failure(requestError.localizedDescription);
+        return;
+    }
+    [self sendTwitterRequest:request completion:completion failure:failure];
 }
 
 #pragma mark - Private metods

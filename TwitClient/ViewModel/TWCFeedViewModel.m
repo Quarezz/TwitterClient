@@ -7,10 +7,13 @@
 //
 
 #import "TWCFeedViewModel.h"
+#import <ReactiveCocoa/ReactiveCocoa.h>
+#import "TWCPostItem.h"
 
 @interface TWCFeedViewModel()
 
 @property (nonatomic, strong) id<TWCTwitterFeedServiceInterface> feedService;
+@property (nonatomic, strong) id<TWCTwitterSessionServiceInterface> sessionService;
 
 @end
 
@@ -18,23 +21,78 @@
 
 #pragma mark - Initialization
 
--(id) initWithFeedService:(id<TWCTwitterFeedServiceInterface>)service
+-(id) initWithSessionService:(id<TWCTwitterSessionServiceInterface>)sessionService feedService:(id<TWCTwitterFeedServiceInterface>)feedService
 {
     if (self = [super init])
     {
-        self.feedService = service;
+        self.sessionService = sessionService;
+        self.feedService = feedService;
     }
     return self;
 }
 
--(void) fetchFeed
+#pragma mark - Methods
+
+-(void) fetchUser
 {
-    [self.feedService fetchFeedWithCompletion:^(NSArray<TWCPostItem *> *posts) {
-       
+    TWCUser *activeUser = [self.sessionService activeUser];
+    if (activeUser != nil)
+    {
         
-    } failure:^(NSString *reason) {
-        
+    }
+    else
+    {
+        [self.sessionService loginWithCompletion:^(TWCUser *user) {
+            
+        } failure:^(NSString *reason) {
+            
+        }];
+    }
+}
+
+#pragma mark - Commands
+
+-(RACCommand *) refreshCommand
+{
+    __weak typeof(self) weakSelf = self;
+    return [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
+        return [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+            
+            [self.feedService fetchFeedWithCompletion:^(NSArray<TWCPostItem *> *posts) {
+                
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                strongSelf.feed = [posts mutableCopy];
+                
+                [subscriber sendNext:posts];
+                [subscriber sendCompleted];
+            } failure:^(NSString *reason) {
+                [subscriber sendError:nil];
+            }];
+            return nil;
+        }];
     }];
 }
+
+-(RACCommand *) loadMoreCommand
+{
+    __weak typeof(self) weakSelf = self;
+    return [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
+        return [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+            
+            [self.feedService loadMoreWithLastID: weakSelf.feed.lastObject.identifier completion:^(NSArray<TWCPostItem *> *posts) {
+                
+                __strong typeof(weakSelf) strongSelf = weakSelf;
+                [strongSelf.feed addObjectsFromArray:posts];
+                
+                [subscriber sendNext:posts];
+                [subscriber sendCompleted];
+            } failure:^(NSString *reason) {
+                [subscriber sendError:nil];
+            }];
+            return nil;
+        }];
+    }];
+}
+
 
 @end

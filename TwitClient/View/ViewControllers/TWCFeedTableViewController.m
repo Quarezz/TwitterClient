@@ -8,10 +8,15 @@
 
 #import "TWCFeedTableViewController.h"
 #import "TWCFeedViewModel.h"
+#import <ReactiveCocoa/ReactiveCocoa.h>
 
 @interface TWCFeedTableViewController ()
 
 @property (nonatomic, strong) TWCFeedViewModel *viewModel;
+
+@property (nonatomic, strong) UIBarButtonItem *loginButton;
+@property (nonatomic, strong) UIBarButtonItem *logoutButton;
+@property (nonatomic, strong) UIBarButtonItem *postButton;
 
 @end
 
@@ -23,8 +28,9 @@
 {
     [super viewDidLoad];
     
+    self.loginButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.login", nil) style:UIBarButtonItemStylePlain target:self  action:@selector(loginTapped)];
+    
     self.refreshControl = [UIRefreshControl new];
-    [self.refreshControl addTarget:self action:@selector(refreshTriggered) forControlEvents:UIControlEventValueChanged];
 }
 
 #pragma mark - Public methods
@@ -32,14 +38,31 @@
 -(void) bindModel:(TWCFeedViewModel *)viewModel
 {
     self.viewModel = viewModel;
+    
+    __weak typeof(self) weakSelf = self;
+    
+    self.refreshControl.rac_command = self.viewModel.refreshCommand;
+    [RACObserve(self.viewModel, feed) subscribeNext:^(id _) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf.tableView reloadData];
+    }];
 }
 
 #pragma mark - Actions
 
--(void) refreshTriggered
+-(void) loginTapped
 {
-    [self.viewModel fetchFeed];
-    [self.refreshControl endRefreshing];
+    
+}
+
+-(void) logoutTapped
+{
+    
+}
+
+-(void) postTapped
+{
+    
 }
 
 #pragma mark - Table view data source
