@@ -16,6 +16,7 @@
 		2E5C1F601FA602E800A49370 /* TWCFeedTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F561FA602E700A49370 /* TWCFeedTableViewController.m */; };
 		2E5C1F611FA602E800A49370 /* FeedViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F591FA602E800A49370 /* FeedViewModel.m */; };
 		2E5C1F641FA6031600A49370 /* TWCPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F631FA6031600A49370 /* TWCPostCell.m */; };
+		BFD8A796C5E69FF2B3D3511A /* Pods_TwitClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7ABA70EE1D1F23014E8BC8 /* Pods_TwitClient.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A7ABA70EE1D1F23014E8BC8 /* Pods_TwitClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TwitClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		210105D23790798D9C84D31A /* Pods-TwitClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitClient.release.xcconfig"; path = "Pods/Target Support Files/Pods-TwitClient/Pods-TwitClient.release.xcconfig"; sourceTree = "<group>"; };
 		2E5C1F191FA6028C00A49370 /* TwitClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E5C1F2D1FA6028C00A49370 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E5C1F341FA6028C00A49370 /* TwitClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TwitClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,6 +50,7 @@
 		2E5C1F591FA602E800A49370 /* FeedViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedViewModel.m; sourceTree = "<group>"; };
 		2E5C1F621FA6031600A49370 /* TWCPostCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TWCPostCell.h; sourceTree = "<group>"; };
 		2E5C1F631FA6031600A49370 /* TWCPostCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TWCPostCell.m; sourceTree = "<group>"; };
+		F10D36181123F4AD778A68FD /* Pods-TwitClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwitClient/Pods-TwitClient.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFD8A796C5E69FF2B3D3511A /* Pods_TwitClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,6 +78,8 @@
 				2E5C1F1B1FA6028C00A49370 /* TwitClient */,
 				2E5C1F371FA6028C00A49370 /* TwitClientTests */,
 				2E5C1F1A1FA6028C00A49370 /* Products */,
+				346D095C4A905606E6B7AC4B /* Pods */,
+				9B4E32E8E914FAE68C93E13C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -195,6 +202,23 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		346D095C4A905606E6B7AC4B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F10D36181123F4AD778A68FD /* Pods-TwitClient.debug.xcconfig */,
+				210105D23790798D9C84D31A /* Pods-TwitClient.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		9B4E32E8E914FAE68C93E13C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1A7ABA70EE1D1F23014E8BC8 /* Pods_TwitClient.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -202,9 +226,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E5C1F3D1FA6028C00A49370 /* Build configuration list for PBXNativeTarget "TwitClient" */;
 			buildPhases = (
+				701B39F9F218E8BA74C7E949 /* [CP] Check Pods Manifest.lock */,
 				2E5C1F151FA6028C00A49370 /* Sources */,
 				2E5C1F161FA6028C00A49370 /* Frameworks */,
 				2E5C1F171FA6028C00A49370 /* Resources */,
+				973FA021D3C518C0B818547A /* [CP] Embed Pods Frameworks */,
+				E1C30FC76247EF94CA975DCE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -290,6 +317,60 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		701B39F9F218E8BA74C7E949 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TwitClient-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		973FA021D3C518C0B818547A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-TwitClient/Pods-TwitClient-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/ReactiveCocoa/ReactiveCocoa.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveCocoa.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TwitClient/Pods-TwitClient-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E1C30FC76247EF94CA975DCE /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TwitClient/Pods-TwitClient-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2E5C1F151FA6028C00A49370 /* Sources */ = {
@@ -430,6 +511,7 @@
 		};
 		2E5C1F3E1FA6028C00A49370 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F10D36181123F4AD778A68FD /* Pods-TwitClient.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -445,6 +527,7 @@
 		};
 		2E5C1F3F1FA6028C00A49370 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 210105D23790798D9C84D31A /* Pods-TwitClient.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
