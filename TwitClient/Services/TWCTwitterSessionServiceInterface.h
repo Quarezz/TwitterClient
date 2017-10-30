@@ -14,6 +14,7 @@ typedef void (^LoginFailure)(NSString *reason);
 @protocol TWCTwitterSessionServiceInterface
 
 -(TWCUser *) activeUser;
+-(void) logout;
 -(void) loginWithCompletion: (LoginCompletion) completion failure: (LoginFailure) failure;
 
 @end

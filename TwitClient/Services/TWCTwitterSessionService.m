@@ -16,9 +16,17 @@
 
 -(TWCUser *) activeUser
 {
-    TWCUser *user = [[TWCUser alloc] init];
-    user.name = [[TWTRSessionStore new] session].userID;
-    return user;
+    NSString *userId = [[[Twitter sharedInstance] sessionStore] session].userID;
+    if (userId != nil)
+    {
+        TWCUser *user = [[TWCUser alloc] init];
+        user.name = userId;
+        return user;
+    }
+    else
+    {
+        return nil;
+    }
 }
 
 -(void) loginWithCompletion:(LoginCompletion)completion failure:(LoginFailure)failure
@@ -35,6 +43,11 @@
         user.name = session.userName;
         completion(user);
     }];
+}
+
+-(void) logout
+{
+    [[[Twitter sharedInstance] sessionStore] logOutUserID:[[[Twitter sharedInstance] sessionStore] session].userID];
 }
 
 @end

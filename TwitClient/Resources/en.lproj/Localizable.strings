@@ -7,3 +7,5 @@
 */
 
 "web.parsing.error"="We have a problem, try again later";
+"feed.actions.logout"="Logout";
+"feed.actions.login"="Login";

@@ -18,8 +18,8 @@
         self.text = dict[@"text"];
         
         NSDateFormatter *dateFormatter = [NSDateFormatter new];
-        dateFormatter.dateFormat = @"EEE MMM dd HH:mm:ss Z yyyy";
         //Wed, 27 Aug 2008 13:08:45 +00:00
+        dateFormatter.dateFormat = @"EEE MMM dd HH:mm:ss Z yyyy";
         self.date = [dateFormatter dateFromString:dict[@"created_at"]];
         self.favouriteCount = [dict[@"favorited"] unsignedIntegerValue];
         
@@ -27,7 +27,7 @@
         if ([userDict isKindOfClass:[NSDictionary class]])
         {
             self.authorName = userDict[@"name"];
-            self.authorName = userDict[@"screen_name"];
+            self.authorScreenName = userDict[@"screen_name"];
         }
     }
     return self;

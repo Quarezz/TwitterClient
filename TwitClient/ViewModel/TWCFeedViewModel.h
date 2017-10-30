@@ -18,8 +18,12 @@
 @property (nonatomic, strong) TWCUser *user;
 @property (nonatomic, strong) NSMutableArray<TWCPostItem *> *feed;
 
-@property (nonatomic, strong) RACCommand *refreshCommand;
-@property (nonatomic, strong) RACCommand *loadMoreCommand;
+@property (nonatomic, assign) BOOL active;
+
+@property (nonatomic, strong, readonly) RACCommand *loginCommand;
+@property (nonatomic, strong, readonly) RACCommand *logoutCommand;
+@property (nonatomic, strong, readonly) RACCommand *refreshCommand;
+@property (nonatomic, strong, readonly) RACCommand *loadMoreCommand;
 
 -(id) initWithSessionService: (id<TWCTwitterSessionServiceInterface>) sessionService
                  feedService: (id<TWCTwitterFeedServiceInterface>) feedService;

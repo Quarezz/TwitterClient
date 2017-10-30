@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class TWCPostItem;
+
 @interface TWCPostCell : UITableViewCell
+
+-(void) setData: (TWCPostItem *) data;
 
 @end
