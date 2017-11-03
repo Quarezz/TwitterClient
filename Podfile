@@ -10,6 +10,12 @@ target 'TwitClient' do
     pod 'TwitterKit'
 end
 
+target 'TwitClientTests' do
+    
+    pod 'TwitterKit'
+    pod 'Kiwi'
+end
+
 
 
 

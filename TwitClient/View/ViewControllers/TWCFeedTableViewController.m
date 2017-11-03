@@ -12,11 +12,29 @@
 #import "TWCUser.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
+@interface UIRefreshControl(ManualTrigger)
+
+-(void) trigger;
+
+@end
+
+@implementation UIRefreshControl(ManualTrigger)
+
+-(void) trigger
+{
+    UIScrollView *scrollView = (UIScrollView *)[self superview];
+    if ([scrollView isKindOfClass:[UIScrollView class]])
+    {
+        [scrollView setContentOffset:CGPointMake(0, scrollView.contentOffset.y - self.frame.size.height)];
+        [self beginRefreshing];
+    }
+}
+
+@end
+
 @interface TWCFeedTableViewController ()
 
 @property (nonatomic, strong) TWCFeedViewModel *viewModel;
-
-@property (nonatomic, strong) UIRefreshControl *hidableRefreshControl;
 
 @property (nonatomic, strong) UIBarButtonItem *loginButton;
 @property (nonatomic, strong) UIBarButtonItem *logoutButton;
@@ -35,7 +53,7 @@
         self.loginButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.login", nil) style:UIBarButtonItemStylePlain target:nil  action:nil];
         self.logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.logout", nil) style:UIBarButtonItemStylePlain target:nil  action:nil];
         
-        self.hidableRefreshControl = [UIRefreshControl new];
+        self.refreshControl = [UIRefreshControl new];
         
         [self.tableView registerNib:[UINib nibWithNibName:@"TweetPostCell" bundle:nil] forCellReuseIdentifier:@"TWCPostCell"];
         self.tableView.allowsSelection = NO;
@@ -62,18 +80,17 @@
     self.viewModel = viewModel;
     
     self.navigationItem.leftBarButtonItem = self.viewModel.user ? self.logoutButton : self.loginButton;
-    self.refreshControl = self.viewModel.user ? self.hidableRefreshControl : nil;
     
     // Commands
     
-    self.hidableRefreshControl.rac_command = self.viewModel.refreshCommand;
+    self.refreshControl.rac_command = self.viewModel.refreshCommand;
     self.loginButton.rac_command = self.viewModel.loginCommand;
     self.logoutButton.rac_command = self.viewModel.logoutCommand;
     
     // Macro bindings
     
     RAC(self,navigationItem.title) = [RACObserve(self.viewModel, user.name) deliverOnMainThread];
-    RAC(self, navigationItem.leftBarButtonItem.enabled) = [RACObserve(self.viewModel, connectionAvailable) deliverOnMainThread];
+    RAC(self,navigationItem.leftBarButtonItem.enabled) = [RACObserve(self.viewModel, connectionAvailable) deliverOnMainThread];
     
     // Observers
     
@@ -84,7 +101,7 @@
         [self.viewModel.connectionCheckBreakCommand execute:nil];
     }];
     
-    [RACObserve(self, viewModel.error) subscribeNext:^(id x) {
+    [[RACObserve(self, viewModel.error) deliverOnMainThread] subscribeNext:^(id x) {
         @strongify(self)
         
         if (self.viewModel.error)
@@ -93,18 +110,18 @@
         }
     }];
 
-    [RACObserve(self, viewModel.user) subscribeNext:^(id x) {
+    [[RACObserve(self, viewModel.user) deliverOnMainThread] subscribeNext:^(id x) {
         @strongify(self)
         
         self.navigationItem.leftBarButtonItem = self.viewModel.user ? self.logoutButton : self.loginButton;
-        self.refreshControl = self.viewModel.user ? self.hidableRefreshControl : nil;
+        self.tableView.userInteractionEnabled = self.viewModel.user ? YES : NO;
     } error:^(NSError *error) {
         @strongify(self)
         
         [self showError:error.localizedDescription];
     }];
 
-    [RACObserve(self.viewModel, feed) subscribeNext:^(id _) {
+    [[RACObserve(self.viewModel, feed) deliverOnMainThread] subscribeNext:^(id _) {
         @strongify(self)
         
         [self.tableView reloadData];
