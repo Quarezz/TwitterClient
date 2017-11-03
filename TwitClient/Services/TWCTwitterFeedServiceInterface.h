@@ -18,4 +18,6 @@ typedef void (^FeedFailure)(NSString *reason);
             withCompletion: (FeedCompletion) completion
                    failure: (FeedFailure) failure;
 
+-(void) invalidateCache;
+
 @end

@@ -13,6 +13,7 @@
 #import "TWCFeedViewModel.h"
 #import "TWCTwitterFeedService.h"
 #import "TWCTwitterSessionService.h"
+#import "TWCPostsStorage.h"
 
 
 @implementation TWCAppFactory
@@ -23,7 +24,7 @@
     [vc bindModel:[[TWCFeedViewModel alloc] initWithSessionService:[[TWCTwitterSessionService alloc] initWithSDK:[Twitter sharedInstance]
                                                                                                  defaultsStorage:[NSUserDefaults standardUserDefaults]]
                                                            feedService:[[TWCTwitterFeedService alloc] initWithApiClient:[TWCApiClient new]
-                                                                                                                storage:nil]]];
+                                                                                                                storage:[[TWCPostsStorage alloc] initWithInMemoryStorage:NO]]]];
     return vc;
 }
 

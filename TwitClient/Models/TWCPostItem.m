@@ -7,6 +7,7 @@
 //
 
 #import "TWCPostItem.h"
+#import "TWCPostStorageItem+CoreDataClass.h"
 
 @implementation TWCPostItem
 
@@ -14,7 +15,7 @@
 {
     if (self = [super init])
     {
-        self.identifier = dict[@"id"];
+        self.identifier = [dict[@"id"] stringValue];
         self.text = dict[@"text"];
         
         NSDateFormatter *dateFormatter = [NSDateFormatter new];
@@ -31,6 +32,22 @@
         }
     }
     return self;
+}
+
+@end
+
+@implementation TWCPostItem(StorageConvenience)
+
++(TWCPostItem *) fromStorableData: (TWCPostStorageItem *) data
+{
+    TWCPostItem *post = [TWCPostItem new];
+    post.identifier = data.identifier;
+    post.text = data.text;
+    post.date = data.date;
+    post.favouriteCount = data.favouriteCount;
+    post.authorName = data.authorName;
+    post.authorScreenName = data.authorScreenName;
+    return post;
 }
 
 @end

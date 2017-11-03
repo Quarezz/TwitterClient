@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2E59DB0D1FAC9DF60041A6AD /* TwitterSessionServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E59DB0C1FAC9DF60041A6AD /* TwitterSessionServiceTests.m */; };
-		2E5C1F5A1FA602E800A49370 /* TwitClient.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F451FA602E700A49370 /* TwitClient.xcdatamodeld */; };
+		2E5C1F5A1FA602E800A49370 /* TWCPostStorageItem.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F451FA602E700A49370 /* TWCPostStorageItem.xcdatamodeld */; };
 		2E5C1F5B1FA602E800A49370 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E5C1F491FA602E700A49370 /* Assets.xcassets */; };
 		2E5C1F5C1FA602E800A49370 /* TweetPostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E5C1F4C1FA602E700A49370 /* TweetPostCell.xib */; };
 		2E5C1F5D1FA602E800A49370 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F4E1FA602E700A49370 /* main.m */; };
@@ -26,6 +26,7 @@
 		2E6E45C21FAC8AE0002796F7 /* TWCAppFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6E45C11FAC8AE0002796F7 /* TWCAppFactory.m */; };
 		2E6E45C51FAC8DF8002796F7 /* TWCApiClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6E45C41FAC8DF8002796F7 /* TWCApiClient.m */; };
 		2EAAB4071FACC3D900863AC0 /* TwitterFeedServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAAB4061FACC3D900863AC0 /* TwitterFeedServiceTests.m */; };
+		2EAAB40A1FACC72700863AC0 /* TWCPostsStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2EAAB4091FACC72700863AC0 /* TWCPostsStorage.m */; };
 		695E94CAFF008C2EB35B1377 /* Pods_TwitClientTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 278E4EFAFBBDC36DA0F54BA4 /* Pods_TwitClientTests.framework */; };
 		BFD8A796C5E69FF2B3D3511A /* Pods_TwitClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7ABA70EE1D1F23014E8BC8 /* Pods_TwitClient.framework */; };
 /* End PBXBuildFile section */
@@ -83,6 +84,9 @@
 		2E6E45C31FAC8DF8002796F7 /* TWCApiClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TWCApiClient.h; sourceTree = "<group>"; };
 		2E6E45C41FAC8DF8002796F7 /* TWCApiClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TWCApiClient.m; sourceTree = "<group>"; };
 		2EAAB4061FACC3D900863AC0 /* TwitterFeedServiceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TwitterFeedServiceTests.m; sourceTree = "<group>"; };
+		2EAAB4081FACC72700863AC0 /* TWCPostsStorage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TWCPostsStorage.h; sourceTree = "<group>"; };
+		2EAAB4091FACC72700863AC0 /* TWCPostsStorage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TWCPostsStorage.m; sourceTree = "<group>"; };
+		2EAAB40B1FACC73300863AC0 /* TWCPostsStorageInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TWCPostsStorageInterface.h; sourceTree = "<group>"; };
 		A46F0D3643F913C9663D413E /* Pods-TwitClientTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitClientTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwitClientTests/Pods-TwitClientTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F10D36181123F4AD778A68FD /* Pods-TwitClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwitClient/Pods-TwitClient.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -166,7 +170,10 @@
 		2E5C1F441FA602E700A49370 /* Storage */ = {
 			isa = PBXGroup;
 			children = (
-				2E5C1F451FA602E700A49370 /* TwitClient.xcdatamodeld */,
+				2E5C1F451FA602E700A49370 /* TWCPostStorageItem.xcdatamodeld */,
+				2EAAB4081FACC72700863AC0 /* TWCPostsStorage.h */,
+				2EAAB4091FACC72700863AC0 /* TWCPostsStorage.m */,
+				2EAAB40B1FACC73300863AC0 /* TWCPostsStorageInterface.h */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -532,9 +539,10 @@
 				2E6E45C21FAC8AE0002796F7 /* TWCAppFactory.m in Sources */,
 				2E5C1F5E1FA602E800A49370 /* TWCAppDelegate.m in Sources */,
 				2E5C1F5D1FA602E800A49370 /* main.m in Sources */,
-				2E5C1F5A1FA602E800A49370 /* TwitClient.xcdatamodeld in Sources */,
+				2E5C1F5A1FA602E800A49370 /* TWCPostStorageItem.xcdatamodeld in Sources */,
 				2E5C1F7E1FA628E300A49370 /* TWCUser.m in Sources */,
 				2E5C1F7A1FA628BA00A49370 /* TWCTwitterSessionService.m in Sources */,
+				2EAAB40A1FACC72700863AC0 /* TWCPostsStorage.m in Sources */,
 				2E5C1F641FA6031600A49370 /* TWCPostCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -857,13 +865,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		2E5C1F451FA602E700A49370 /* TwitClient.xcdatamodeld */ = {
+		2E5C1F451FA602E700A49370 /* TWCPostStorageItem.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				2E5C1F461FA602E700A49370 /* TwitClient.xcdatamodel */,
 			);
 			currentVersion = 2E5C1F461FA602E700A49370 /* TwitClient.xcdatamodel */;
-			path = TwitClient.xcdatamodeld;
+			path = TWCPostStorageItem.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

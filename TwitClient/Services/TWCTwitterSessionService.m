@@ -61,7 +61,7 @@ static NSString *kUserNameField = @"twitclient.username";
     // why it had to be twitter(((((
     
     __weak typeof(self) weakSelf = self;
-    [self.sdkInstance logInWithCompletion:^(TWTRSession * _Nullable session, NSError * _Nullable error) {
+    [self.sdkInstance logInWithMethods:TWTRLoginMethodWebBasedForceLogin completion:^(TWTRSession * _Nullable session, NSError * _Nullable error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         
         if (error != nil)

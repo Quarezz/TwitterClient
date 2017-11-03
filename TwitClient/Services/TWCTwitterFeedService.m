@@ -14,7 +14,7 @@
 @interface TWCTwitterFeedService()
 
 @property (nonatomic, strong) TWCApiClient *apiClient;
-@property (nonatomic, strong) id storage;
+@property (nonatomic, strong) id<TWCPostsStorageInterface> storage;
 
 @end
 
@@ -22,7 +22,7 @@
 
 #pragma mark - Initialization
 
--(id) initWithApiClient:(TWCApiClient *)apiClient storage:(id)storage
+-(id) initWithApiClient:(TWCApiClient *)apiClient storage:(id<TWCPostsStorageInterface>)storage
 {
     if (self = [super init])
     {
@@ -38,12 +38,23 @@
 {
     if (fromCache)
     {
-        // load data
+        completion([self.storage fetchPosts]);
     }
     else
     {
-        [self.apiClient fetchFeedForTwitterClient:[[TWTRAPIClient alloc] initWithUserID:userId] completion:completion failure:failure];
+        __weak typeof(self) weakSelf = self;
+        [self.apiClient fetchFeedForTwitterClient:[[TWTRAPIClient alloc] initWithUserID:userId] completion:^(NSArray<TWCPostItem *> *posts) {
+            __strong typeof(self) strongSelf = weakSelf;
+            
+            [strongSelf.storage storePosts:posts];
+            completion(posts);
+        } failure:failure];
     }
+}
+
+-(void) invalidateCache
+{
+    [self.storage clearPosts];
 }
 
 @end

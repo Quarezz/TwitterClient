@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class TWCPostStorageItem;
+
 @interface TWCPostItem : NSObject
 
 @property (nonatomic, copy) NSString *identifier;
@@ -19,5 +21,11 @@
 @property (nonatomic, copy) NSString *authorScreenName;
 
 -(id) initWithDictionary: (NSDictionary *) dict;
+
+@end
+
+@interface TWCPostItem(StorageConvenience)
+
++(TWCPostItem *) fromStorableData: (TWCPostStorageItem *) data;
 
 @end

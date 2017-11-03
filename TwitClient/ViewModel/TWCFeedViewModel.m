@@ -22,6 +22,7 @@
 @property (nonatomic, strong) RACSignal *loginSignal;
 @property (nonatomic, strong) RACSignal *logoutSignal;
 @property (nonatomic, strong) RACSignal *fetchSignal;
+@property (nonatomic, strong) RACSignal *localFetchSignal;
 @property (nonatomic, strong) RACSignal *reachUnsubSignal;
 
 // I had to add this signal to fix issue with TwitterKit and internet connection
@@ -72,6 +73,21 @@
             return nil;
         }] logAll];
         
+        self.localFetchSignal = [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+            @strongify(self)
+            
+            [self.feedService fetchFeedForClient: self.user.identifier fromCache: YES withCompletion:^(NSArray<TWCPostItem *> *posts) {
+                
+                self.feed = [posts mutableCopy];
+                [subscriber sendNext:nil];
+                [subscriber sendCompleted];
+            } failure:^(NSString *reason) {
+                
+                [subscriber sendError:[NSError errorWithString:reason]];
+            }];
+            return nil;
+        }] logAll];
+        
         self.isLoggedInSignal = [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
             @strongify(self)
             
@@ -93,6 +109,7 @@
             @strongify(self)
             
             [self.sessionService logout];
+            [self.feedService invalidateCache];
             self.user = nil;
             self.feed = nil;
             [subscriber sendCompleted];
@@ -105,7 +122,7 @@
             if (self.feed == nil)
             {
                 // show stored feed
-                [self.refreshCommand execute:nil];
+                [[self localFetchCommand] execute:nil];
             }
          }];
         
@@ -121,6 +138,7 @@
         self.reachability.reachableBlock = ^(Reachability *reach) {
             @strongify(self)
             self.connectionAvailable = YES;
+            [self.refreshCommand execute:nil];
         };
         self.reachability.unreachableBlock = ^(Reachability *reach) {
             @strongify(self)
@@ -173,6 +191,21 @@
 {
     return [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
         return [self.reachUnsubSignal logAll];
+    }];
+}
+
+#pragma mark - Private commands
+
+-(RACCommand *) localFetchCommand
+{
+    @weakify(self)
+    return [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
+        @strongify(self)
+        
+        return [[RACSignal
+                 if:self.isLoggedInSignal
+                 then:self.localFetchSignal
+                 else:[RACSignal empty]] logAll];
     }];
 }
 
