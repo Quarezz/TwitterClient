@@ -22,6 +22,7 @@
 		2E5C1F751FA61D2A00A49370 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2E5C1F771FA61D2A00A49370 /* Localizable.strings */; };
 		2E5C1F7A1FA628BA00A49370 /* TWCTwitterSessionService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F791FA628BA00A49370 /* TWCTwitterSessionService.m */; };
 		2E5C1F7E1FA628E300A49370 /* TWCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E5C1F7D1FA628E300A49370 /* TWCUser.m */; };
+		2E6E45BC1FAC604E002796F7 /* NSError+Convenience.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E6E45BB1FAC604E002796F7 /* NSError+Convenience.m */; };
 		BFD8A796C5E69FF2B3D3511A /* Pods_TwitClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7ABA70EE1D1F23014E8BC8 /* Pods_TwitClient.framework */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,8 @@
 		2E5C1F7B1FA628D100A49370 /* TWCTwitterSessionServiceInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TWCTwitterSessionServiceInterface.h; sourceTree = "<group>"; };
 		2E5C1F7C1FA628E300A49370 /* TWCUser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TWCUser.h; sourceTree = "<group>"; };
 		2E5C1F7D1FA628E300A49370 /* TWCUser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TWCUser.m; sourceTree = "<group>"; };
+		2E6E45BA1FAC604E002796F7 /* NSError+Convenience.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSError+Convenience.h"; sourceTree = "<group>"; };
+		2E6E45BB1FAC604E002796F7 /* NSError+Convenience.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSError+Convenience.m"; sourceTree = "<group>"; };
 		F10D36181123F4AD778A68FD /* Pods-TwitClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitClient.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwitClient/Pods-TwitClient.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,6 +116,7 @@
 		2E5C1F1B1FA6028C00A49370 /* TwitClient */ = {
 			isa = PBXGroup;
 			children = (
+				2E6E45B81FAC6040002796F7 /* Utils */,
 				2E5C1F681FA6056200A49370 /* Services */,
 				2E5C1F4D1FA602E700A49370 /* Core */,
 				2E5C1F471FA602E700A49370 /* Models */,
@@ -238,6 +242,23 @@
 				2E5C1F7B1FA628D100A49370 /* TWCTwitterSessionServiceInterface.h */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		2E6E45B81FAC6040002796F7 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				2E6E45B91FAC6040002796F7 /* Categories */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		2E6E45B91FAC6040002796F7 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				2E6E45BA1FAC604E002796F7 /* NSError+Convenience.h */,
+				2E6E45BB1FAC604E002796F7 /* NSError+Convenience.m */,
+			);
+			path = Categories;
 			sourceTree = "<group>";
 		};
 		346D095C4A905606E6B7AC4B /* Pods */ = {
@@ -423,6 +444,7 @@
 				2E5C1F601FA602E800A49370 /* TWCFeedTableViewController.m in Sources */,
 				2E5C1F671FA604AE00A49370 /* TWCFeedViewModel.m in Sources */,
 				2E5C1F6B1FA6057800A49370 /* TWCTwitterFeedService.m in Sources */,
+				2E6E45BC1FAC604E002796F7 /* NSError+Convenience.m in Sources */,
 				2E5C1F721FA6142100A49370 /* TWCPostItem.m in Sources */,
 				2E5C1F5E1FA602E800A49370 /* TWCAppDelegate.m in Sources */,
 				2E5C1F5D1FA602E800A49370 /* main.m in Sources */,

@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSMutableArray<TWCPostItem *> *feed;
 
 @property (nonatomic, assign) BOOL active;
+@property (nonatomic, copy) NSError *error;
 
 @property (nonatomic, strong, readonly) RACCommand *loginCommand;
 @property (nonatomic, strong, readonly) RACCommand *logoutCommand;

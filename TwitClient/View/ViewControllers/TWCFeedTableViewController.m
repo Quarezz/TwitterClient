@@ -64,15 +64,38 @@
     
     @weakify(self)
     
+    [RACObserve(self, viewModel.error) subscribeNext:^(id x) {
+        @strongify(self)
+        if (self.viewModel.error)
+        {
+            [self showError:self.viewModel.error.localizedDescription];
+        }
+    }];
+    
     [RACObserve(self, viewModel.user) subscribeNext:^(id x) {
         @strongify(self)
         self.navigationItem.leftBarButtonItem = self.viewModel.user ? self.logoutButton : self.loginButton;
+    } error:^(NSError *error) {
+        @strongify(self)
+        [self showError:error.localizedDescription];
     }];
     
     [RACObserve(self.viewModel, feed) subscribeNext:^(id _) {
         @strongify(self)
         [self.tableView reloadData];
+    } error:^(NSError *error) {
+        @strongify(self)
+        [self showError:error.localizedDescription];
     }];
+}
+
+#pragma mark - Private methods
+
+-(void) showError: (NSString *) reason
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:reason preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"common.ok", nil) style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark - Table view data source

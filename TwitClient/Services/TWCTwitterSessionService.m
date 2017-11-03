@@ -31,6 +31,10 @@
 
 -(void) loginWithCompletion:(LoginCompletion)completion failure:(LoginFailure)failure
 {
+    // Unable to handle case with SFSafariViewController tapped 'Done' (inside vc itself).
+    // Looks like SDK just ignores delegate method and doesn't throw callback
+    // For the sake of sanity I'll just leave this as is as this is just a test task
+    // why it had to be twitter(((((
     [[Twitter sharedInstance] logInWithCompletion:^(TWTRSession * _Nullable session, NSError * _Nullable error) {
         
         if (error != nil)

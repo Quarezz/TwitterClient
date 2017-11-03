@@ -8,6 +8,7 @@
 
 #import "TWCFeedViewModel.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
+#import "NSError+Convenience.h"
 #import "TWCPostItem.h"
 
 @interface TWCFeedViewModel()
@@ -41,9 +42,10 @@
                 
                 self.user = user;
                 [subscriber sendNext:user];
+                [subscriber sendCompleted];
             } failure:^(NSString *reason) {
                 
-                [subscriber sendError:[NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey: reason}]];
+                [subscriber sendError:[NSError errorWithString:reason]];
             }];
             return nil;
         }];
@@ -57,7 +59,8 @@
                 [subscriber sendNext:nil];
                 [subscriber sendCompleted];
             } failure:^(NSString *reason) {
-                [subscriber sendError:nil];
+                
+                [subscriber sendError:[NSError errorWithString:reason]];
             }];
             return nil;
         }];
@@ -85,6 +88,7 @@
             [self.sessionService logout];
             self.user = nil;
             self.feed = nil;
+            [subscriber sendCompleted];
             return nil;
         }];
         
@@ -104,8 +108,10 @@
     @weakify(self)
     return [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
         @strongify(self)
-        return [self.loginSignal then:^RACSignal *{
+        return [[self.loginSignal then:^RACSignal *{
             return self.fetchSignal;
+        }] doError:^(NSError *error) {
+            self.error = error;
         }];
     }];
 }
@@ -119,11 +125,16 @@
 
 -(RACCommand *) refreshCommand
 {
+    @weakify(self)
     return [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
-        
-        return [RACSignal if:self.isLoggedInSignal
+        @strongify(self)
+        return [[RACSignal
+                 if:self.isLoggedInSignal
                  then:self.fetchSignal
-                 else:[RACSignal concat:@[self.loginSignal, self.fetchSignal]]];
+                 else:[RACSignal concat:@[self.loginSignal, self.fetchSignal]]]
+                doError:^(NSError *error) {
+                    self.error = error;
+        }];
     }];
 }
 
