@@ -24,6 +24,7 @@
 
 @property (nonatomic, strong, readonly) RACCommand *loginCommand;
 @property (nonatomic, strong, readonly) RACCommand *logoutCommand;
+@property (nonatomic, strong, readonly) RACCommand *postCommand;
 @property (nonatomic, strong, readonly) RACCommand *refreshCommand;
 @property (nonatomic, strong, readonly) RACCommand *connectionCheckBreakCommand;
 

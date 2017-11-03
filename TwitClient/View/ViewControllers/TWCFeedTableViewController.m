@@ -12,26 +12,6 @@
 #import "TWCUser.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
-@interface UIRefreshControl(ManualTrigger)
-
--(void) trigger;
-
-@end
-
-@implementation UIRefreshControl(ManualTrigger)
-
--(void) trigger
-{
-    UIScrollView *scrollView = (UIScrollView *)[self superview];
-    if ([scrollView isKindOfClass:[UIScrollView class]])
-    {
-        [scrollView setContentOffset:CGPointMake(0, scrollView.contentOffset.y - self.frame.size.height)];
-        [self beginRefreshing];
-    }
-}
-
-@end
-
 @interface TWCFeedTableViewController ()
 
 @property (nonatomic, strong) TWCFeedViewModel *viewModel;
@@ -52,6 +32,7 @@
     {
         self.loginButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.login", nil) style:UIBarButtonItemStylePlain target:nil  action:nil];
         self.logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.logout", nil) style:UIBarButtonItemStylePlain target:nil  action:nil];
+        self.postButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.post", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
         
         self.refreshControl = [UIRefreshControl new];
         
@@ -86,11 +67,13 @@
     self.refreshControl.rac_command = self.viewModel.refreshCommand;
     self.loginButton.rac_command = self.viewModel.loginCommand;
     self.logoutButton.rac_command = self.viewModel.logoutCommand;
+    self.postButton.rac_command = self.viewModel.postCommand;
     
     // Macro bindings
     
     RAC(self,navigationItem.title) = [RACObserve(self.viewModel, user.name) deliverOnMainThread];
     RAC(self,navigationItem.leftBarButtonItem.enabled) = [RACObserve(self.viewModel, connectionAvailable) deliverOnMainThread];
+    RAC(self,navigationItem.rightBarButtonItem.enabled) = [RACObserve(self.viewModel, connectionAvailable) deliverOnMainThread];
     
     // Observers
     
@@ -114,6 +97,7 @@
         @strongify(self)
         
         self.navigationItem.leftBarButtonItem = self.viewModel.user ? self.logoutButton : self.loginButton;
+        self.navigationItem.rightBarButtonItem = self.viewModel.user ? self.postButton : nil;
         self.tableView.userInteractionEnabled = self.viewModel.user ? YES : NO;
     } error:^(NSError *error) {
         @strongify(self)
