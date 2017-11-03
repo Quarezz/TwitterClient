@@ -16,6 +16,8 @@
 
 @property (nonatomic, strong) TWCFeedViewModel *viewModel;
 
+@property (nonatomic, strong) UIRefreshControl *hidableRefreshControl;
+
 @property (nonatomic, strong) UIBarButtonItem *loginButton;
 @property (nonatomic, strong) UIBarButtonItem *logoutButton;
 @property (nonatomic, strong) UIBarButtonItem *postButton;
@@ -26,17 +28,19 @@
 
 #pragma mark - Overriden
 
--(void) viewDidLoad
+-(id) initWithStyle:(UITableViewStyle)style
 {
-    [super viewDidLoad];
-    
-    self.loginButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.login", nil) style:UIBarButtonItemStylePlain target:nil  action:nil];
-    self.logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.logout", nil) style:UIBarButtonItemStylePlain target:nil  action:nil];
-    
-    self.refreshControl = [UIRefreshControl new];
-    
-    [self.tableView registerNib:[UINib nibWithNibName:@"TweetPostCell" bundle:nil] forCellReuseIdentifier:@"TWCPostCell"];
-    self.tableView.allowsSelection = NO;
+    if (self = [super initWithStyle:style])
+    {
+        self.loginButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.login", nil) style:UIBarButtonItemStylePlain target:nil  action:nil];
+        self.logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.logout", nil) style:UIBarButtonItemStylePlain target:nil  action:nil];
+        
+        self.hidableRefreshControl = [UIRefreshControl new];
+        
+        [self.tableView registerNib:[UINib nibWithNibName:@"TweetPostCell" bundle:nil] forCellReuseIdentifier:@"TWCPostCell"];
+        self.tableView.allowsSelection = NO;
+    }
+    return self;
 }
 
 -(void) viewWillAppear:(BOOL)animated
@@ -56,32 +60,53 @@
 -(void) bindModel:(TWCFeedViewModel *)viewModel
 {
     self.viewModel = viewModel;
-    self.refreshControl.rac_command = self.viewModel.refreshCommand;
+    
+    self.navigationItem.leftBarButtonItem = self.viewModel.user ? self.logoutButton : self.loginButton;
+    self.refreshControl = self.viewModel.user ? self.hidableRefreshControl : nil;
+    
+    // Commands
+    
+    self.hidableRefreshControl.rac_command = self.viewModel.refreshCommand;
     self.loginButton.rac_command = self.viewModel.loginCommand;
     self.logoutButton.rac_command = self.viewModel.logoutCommand;
     
-    RAC(self,navigationItem.title) = RACObserve(self.viewModel, user.name);
+    // Macro bindings
+    
+    RAC(self,navigationItem.title) = [RACObserve(self.viewModel, user.name) deliverOnMainThread];
+    RAC(self, navigationItem.leftBarButtonItem.enabled) = [RACObserve(self.viewModel, connectionAvailable) deliverOnMainThread];
+    
+    // Observers
     
     @weakify(self)
     
+    [[self rac_willDeallocSignal] subscribeCompleted:^{
+        @strongify(self)
+        [self.viewModel.connectionCheckBreakCommand execute:nil];
+    }];
+    
     [RACObserve(self, viewModel.error) subscribeNext:^(id x) {
         @strongify(self)
+        
         if (self.viewModel.error)
         {
             [self showError:self.viewModel.error.localizedDescription];
         }
     }];
-    
+
     [RACObserve(self, viewModel.user) subscribeNext:^(id x) {
         @strongify(self)
+        
         self.navigationItem.leftBarButtonItem = self.viewModel.user ? self.logoutButton : self.loginButton;
+        self.refreshControl = self.viewModel.user ? self.hidableRefreshControl : nil;
     } error:^(NSError *error) {
         @strongify(self)
+        
         [self showError:error.localizedDescription];
     }];
-    
+
     [RACObserve(self.viewModel, feed) subscribeNext:^(id _) {
         @strongify(self)
+        
         [self.tableView reloadData];
     } error:^(NSError *error) {
         @strongify(self)

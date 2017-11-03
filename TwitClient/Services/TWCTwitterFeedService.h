@@ -9,7 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "TWCTwitterFeedServiceInterface.h"
 
+@class TWCApiClient;
+
 @interface TWCTwitterFeedService : NSObject <TWCTwitterFeedServiceInterface>
 
+-(id) init  __unavailable;
++(id) new   __unavailable;
+
+-(id) initWithApiClient: (TWCApiClient *) apiClient storage: (id) storage;
 
 @end

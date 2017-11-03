@@ -8,81 +8,42 @@
 
 #import "TWCTwitterFeedService.h"
 #import <TwitterKit/TwitterKit.h>
+#import "TWCApiClient.h"
 #import "TWCPostItem.h"
 
-static NSString *kFeedUrl = @"https://api.twitter.com/1.1/statuses/user_timeline.json";
-static NSString *kPageLimit = @"20";
+@interface TWCTwitterFeedService()
+
+@property (nonatomic, strong) TWCApiClient *apiClient;
+@property (nonatomic, strong) id storage;
+
+@end
 
 @implementation TWCTwitterFeedService
 
-#pragma mark - Private methods
+#pragma mark - Initialization
+
+-(id) initWithApiClient:(TWCApiClient *)apiClient storage:(id)storage
+{
+    if (self = [super init])
+    {
+        self.apiClient = apiClient;
+        self.storage = storage;
+    }
+    return self;
+}
 
 #pragma mark - TWCTwitterFeedServiceInterface
 
--(void) fetchFeedWithCompletion:(FeedCompletion)completion failure:(FeedFailure)failure
+-(void) fetchFeedForClient:(NSString *)userId fromCache:(BOOL)fromCache withCompletion:(FeedCompletion)completion failure:(FeedFailure)failure
 {
-    NSError *requestError = nil;
-    NSURLRequest *request = [[TWTRAPIClient clientWithCurrentUser] URLRequestWithMethod:@"GET"
-                                                                                    URL:kFeedUrl
-                                                                             parameters:@{
-                                                                                          @"count": kPageLimit
-                                                                                          }
-                                                                                  error:&requestError];
-    if (requestError != nil)
+    if (fromCache)
     {
-        failure(requestError.localizedDescription);
-        return;
+        // load data
     }
-    [self sendTwitterRequest:request completion:completion failure:failure];
-}
-
--(void) loadMoreWithLastID:(NSString *) lastItemId completion:(FeedCompletion)completion failure:(FeedFailure)failure
-{
-    NSError *requestError = nil;
-    NSURLRequest *request = [[TWTRAPIClient clientWithCurrentUser] URLRequestWithMethod:@"GET"
-                                                                                            URL:kFeedUrl
-                                                                                     parameters:@{
-                                                                                                  @"count": kPageLimit,
-                                                                                                  @"since_id": lastItemId
-                                                                                                  }
-                                                                                          error:&requestError];
-    if (requestError != nil)
+    else
     {
-        failure(requestError.localizedDescription);
-        return;
+        [self.apiClient fetchFeedForTwitterClient:[[TWTRAPIClient alloc] initWithUserID:userId] completion:completion failure:failure];
     }
-    [self sendTwitterRequest:request completion:completion failure:failure];
-}
-
-#pragma mark - Private metods
-
--(void) sendTwitterRequest: (NSURLRequest *) request completion:(FeedCompletion)completion failure:(FeedFailure)failure
-{
-    [[TWTRAPIClient clientWithCurrentUser] sendTwitterRequest:request completion:^(NSURLResponse * _Nullable response, NSData * _Nullable data,
-                                                                                   NSError * _Nullable connectionError) {
-        if (connectionError != nil)
-        {
-            failure(connectionError.localizedDescription);
-            return;
-        }
-        
-        NSError *parsingError = nil;
-        NSArray *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parsingError];
-        if (parsingError != nil || [jsonData isKindOfClass:[NSArray class]] == NO)
-        {
-            failure(NSLocalizedString(@"web.parsing.error", nil));
-            return;
-        }
-        NSLog(@"Received posts: %@", jsonData);
-        
-        NSMutableArray<TWCPostItem *> *feed = [NSMutableArray new];
-        for (NSDictionary *item in jsonData)
-        {
-            TWCPostItem *post = [[TWCPostItem alloc] initWithDictionary:item];
-            [feed addObject:post];
-        }
-        completion(feed);
-    }];
 }
 
 @end

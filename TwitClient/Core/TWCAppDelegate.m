@@ -9,9 +9,7 @@
 #import "TWCAppDelegate.h"
 #import <TwitterKit/TwitterKit.h>
 #import "TWCFeedTableViewController.h"
-#import "TWCFeedViewModel.h"
-#import "TWCTwitterFeedService.h"
-#import "TWCTwitterSessionService.h"
+#import "TWCAppFactory.h"
 
 @implementation TWCAppDelegate
 
@@ -20,12 +18,8 @@
     [[Twitter sharedInstance] startWithConsumerKey:@"5AqiHOLPOMYXW9ZwEZyMFFvot"
                                     consumerSecret:@"yUOe8jcVTnN3QbPfZuC47Yw25Bw5JYiFP6vVzH8vtXM7DCUerS"];
     
-    TWCFeedTableViewController *feedVc = [[TWCFeedTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    [feedVc bindModel:[[TWCFeedViewModel alloc] initWithSessionService:[TWCTwitterSessionService new]
-                                                           feedService:[TWCTwitterFeedService new]]];
-    
     UIWindow *window = [[UIWindow alloc] initWithFrame: [UIScreen mainScreen].bounds];
-    window.rootViewController = [[UINavigationController alloc] initWithRootViewController:feedVc];
+    window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[TWCAppFactory createFeedModule]];
     self.window = window;
     [self.window makeKeyAndVisible];
 }

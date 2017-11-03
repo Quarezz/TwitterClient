@@ -10,17 +10,39 @@
 #import <TwitterKit/TwitterKit.h>
 #import "TWCUser.h"
 
+static NSString *kUserNameField = @"twitclient.username";
+
+@interface TWCTwitterSessionService()
+
+@property (nonatomic, strong) Twitter *sdkInstance;
+@property (nonatomic, strong) NSUserDefaults *defaultsStorage;
+
+@end
+
 @implementation TWCTwitterSessionService
+
+#pragma mark - Initialization
+
+-(id) initWithSDK:(Twitter *)sdkInstance defaultsStorage:(NSUserDefaults *)storage
+{
+    if (self = [super init])
+    {
+        self.sdkInstance = sdkInstance;
+        self.defaultsStorage = storage;
+    }
+    return self;
+}
 
 #pragma mark - TWCTwitterSessionServiceInterface
 
 -(TWCUser *) activeUser
 {
-    NSString *userId = [[[Twitter sharedInstance] sessionStore] session].userID;
+    NSString *userId = [[self.sdkInstance sessionStore] session].userID;
     if (userId != nil)
     {
         TWCUser *user = [[TWCUser alloc] init];
-        user.name = userId;
+        user.identifier = userId;
+        user.name = [self.defaultsStorage objectForKey:kUserNameField];
         return user;
     }
     else
@@ -33,9 +55,14 @@
 {
     // Unable to handle case with SFSafariViewController tapped 'Done' (inside vc itself).
     // Looks like SDK just ignores delegate method and doesn't throw callback
-    // For the sake of sanity I'll just leave this as is as this is just a test task
+    // For the sake of sanity I'll just leave this AS IS cause this is just a test task
+    // Otherwise would be implementing custom login form with REST requests
+    // Also this call doesn't give callback when there is no internet
     // why it had to be twitter(((((
-    [[Twitter sharedInstance] logInWithCompletion:^(TWTRSession * _Nullable session, NSError * _Nullable error) {
+    
+    __weak typeof(self) weakSelf = self;
+    [self.sdkInstance logInWithCompletion:^(TWTRSession * _Nullable session, NSError * _Nullable error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         
         if (error != nil)
         {
@@ -44,14 +71,22 @@
         }
         
         TWCUser *user = [[TWCUser alloc] init];
+        user.identifier = session.userID;
         user.name = session.userName;
+        
+        [strongSelf.defaultsStorage setObject:user.name forKey:kUserNameField];
+        [strongSelf.defaultsStorage synchronize];
+        
         completion(user);
     }];
 }
 
 -(void) logout
 {
-    [[[Twitter sharedInstance] sessionStore] logOutUserID:[[[Twitter sharedInstance] sessionStore] session].userID];
+    [self.defaultsStorage removeObjectForKey:kUserNameField];
+    [self.defaultsStorage synchronize];
+    
+    [[self.sdkInstance sessionStore] logOutUserID:[[[Twitter sharedInstance] sessionStore] session].userID];
 }
 
 @end

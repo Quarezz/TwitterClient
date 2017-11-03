@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0700"
+   LastUpgradeVersion = "0900"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "443800361CBAAE01CE5BC3C0553557AF"
-               BuildableName = "Pods_TwitClient.framework"
-               BlueprintName = "Pods-TwitClient"
-               ReferencedContainer = "container:Pods.xcodeproj">
+               BlueprintIdentifier = "2E5C1F181FA6028C00A49370"
+               BuildableName = "TwitClient.app"
+               BlueprintName = "TwitClient"
+               ReferencedContainer = "container:TwitClient.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,7 +29,26 @@
       language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2E5C1F331FA6028C00A49370"
+               BuildableName = "TwitClientTests.xctest"
+               BlueprintName = "TwitClientTests"
+               ReferencedContainer = "container:TwitClient.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "2E5C1F181FA6028C00A49370"
+            BuildableName = "TwitClient.app"
+            BlueprintName = "TwitClient"
+            ReferencedContainer = "container:TwitClient.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -44,15 +63,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "443800361CBAAE01CE5BC3C0553557AF"
-            BuildableName = "Pods_TwitClient.framework"
-            BlueprintName = "Pods-TwitClient"
-            ReferencedContainer = "container:Pods.xcodeproj">
+            BlueprintIdentifier = "2E5C1F181FA6028C00A49370"
+            BuildableName = "TwitClient.app"
+            BlueprintName = "TwitClient"
+            ReferencedContainer = "container:TwitClient.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -62,6 +82,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "2E5C1F181FA6028C00A49370"
+            BuildableName = "TwitClient.app"
+            BlueprintName = "TwitClient"
+            ReferencedContainer = "container:TwitClient.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

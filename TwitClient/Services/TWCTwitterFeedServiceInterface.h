@@ -13,7 +13,9 @@ typedef void (^FeedFailure)(NSString *reason);
 
 @protocol TWCTwitterFeedServiceInterface
 
--(void) fetchFeedWithCompletion: (FeedCompletion) completion failure: (FeedFailure) failure;
--(void) loadMoreWithLastID: (NSString *) lastItemId completion: (FeedCompletion) completion failure: (FeedFailure) failure;
+-(void) fetchFeedForClient: (NSString *) userId
+                 fromCache: (BOOL) fromCache
+            withCompletion: (FeedCompletion) completion
+                   failure: (FeedFailure) failure;
 
 @end

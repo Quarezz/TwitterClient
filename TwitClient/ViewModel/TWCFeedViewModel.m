@@ -8,8 +8,10 @@
 
 #import "TWCFeedViewModel.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
+#import <Reachability/Reachability.h>
 #import "NSError+Convenience.h"
 #import "TWCPostItem.h"
+#import "TWCUser.h"
 
 @interface TWCFeedViewModel()
 
@@ -20,6 +22,11 @@
 @property (nonatomic, strong) RACSignal *loginSignal;
 @property (nonatomic, strong) RACSignal *logoutSignal;
 @property (nonatomic, strong) RACSignal *fetchSignal;
+@property (nonatomic, strong) RACSignal *reachUnsubSignal;
+
+// I had to add this signal to fix issue with TwitterKit and internet connection
+// For details see TWCTwitterSessionService:34
+@property (nonatomic, strong) Reachability *reachability;
 
 @end
 
@@ -35,9 +42,9 @@
         self.feedService = feedService;
         
         @weakify(self)
-        self.loginSignal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-            
+        self.loginSignal = [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
             @strongify(self)
+            
             [self.sessionService loginWithCompletion:^(TWCUser *user) {
                 
                 self.user = user;
@@ -48,12 +55,12 @@
                 [subscriber sendError:[NSError errorWithString:reason]];
             }];
             return nil;
-        }];
+        }] logAll];
         
-        self.fetchSignal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-           
+        self.fetchSignal = [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
             @strongify(self)
-            [self.feedService fetchFeedWithCompletion:^(NSArray<TWCPostItem *> *posts) {
+            
+            [self.feedService fetchFeedForClient: self.user.identifier fromCache: NO withCompletion:^(NSArray<TWCPostItem *> *posts) {
                 
                 self.feed = [posts mutableCopy];
                 [subscriber sendNext:nil];
@@ -63,11 +70,11 @@
                 [subscriber sendError:[NSError errorWithString:reason]];
             }];
             return nil;
-        }];
+        }] logAll];
         
-        self.isLoggedInSignal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        self.isLoggedInSignal = [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+            @strongify(self)
             
-           @strongify(self)
             TWCUser *user = self.sessionService.activeUser;
             if (user != nil)
             {
@@ -80,23 +87,47 @@
             }
             [subscriber sendCompleted];
             return nil;
-        }];
+        }] logAll];
         
-        self.logoutSignal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-           
+        self.logoutSignal = [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
             @strongify(self)
+            
             [self.sessionService logout];
             self.user = nil;
             self.feed = nil;
             [subscriber sendCompleted];
             return nil;
-        }];
+        }] logAll];
         
         [[[RACObserve(self, active) ignore:@NO] take:1] subscribeNext:^(id _) {
-             @strongify(self);
-             [self.refreshCommand execute:nil];
+            @strongify(self);
+
+            if (self.feed == nil)
+            {
+                // show stored feed
+                [self.refreshCommand execute:nil];
+            }
          }];
         
+        self.reachUnsubSignal = [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+            @strongify(self)
+            
+            [self.reachability stopNotifier];
+            [subscriber sendCompleted];
+            return nil;
+        }];
+        
+        self.reachability = [Reachability reachabilityForInternetConnection];
+        self.reachability.reachableBlock = ^(Reachability *reach) {
+            @strongify(self)
+            self.connectionAvailable = YES;
+        };
+        self.reachability.unreachableBlock = ^(Reachability *reach) {
+            @strongify(self)
+            self.connectionAvailable = NO;
+        };
+        [self.reachability startNotifier];
+        self.connectionAvailable = self.reachability.currentReachabilityStatus != NotReachable;
     }
     return self;
 }
@@ -108,11 +139,11 @@
     @weakify(self)
     return [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
         @strongify(self)
-        return [[self.loginSignal then:^RACSignal *{
+        return [[[self.loginSignal then:^RACSignal *{
             return self.fetchSignal;
         }] doError:^(NSError *error) {
             self.error = error;
-        }];
+        }] logAll];
     }];
 }
 
@@ -128,36 +159,21 @@
     @weakify(self)
     return [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
         @strongify(self)
-        return [[RACSignal
-                 if:self.isLoggedInSignal
-                 then:self.fetchSignal
-                 else:[RACSignal concat:@[self.loginSignal, self.fetchSignal]]]
-                doError:^(NSError *error) {
-                    self.error = error;
-        }];
+        return [[[RACSignal
+                  if:self.isLoggedInSignal
+                  then:self.fetchSignal
+                  else:[RACSignal concat:@[self.loginSignal, self.fetchSignal]]]
+                 doError:^(NSError *error) {
+                     self.error = error;
+                 }] logAll];
     }];
 }
 
--(RACCommand *) loadMoreCommand
+-(RACCommand *) connectionCheckBreakCommand
 {
-    __weak typeof(self) weakSelf = self;
     return [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
-        return [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-            
-            [self.feedService loadMoreWithLastID: weakSelf.feed.lastObject.identifier completion:^(NSArray<TWCPostItem *> *posts) {
-                
-                __strong typeof(weakSelf) strongSelf = weakSelf;
-                [strongSelf.feed addObjectsFromArray:posts];
-                
-                [subscriber sendNext:posts];
-                [subscriber sendCompleted];
-            } failure:^(NSString *reason) {
-                [subscriber sendError:nil];
-            }];
-            return nil;
-        }];
+        return [self.reachUnsubSignal logAll];
     }];
 }
-
 
 @end

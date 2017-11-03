@@ -9,6 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "TWCTwitterSessionServiceInterface.h"
 
+@class Twitter;
+
 @interface TWCTwitterSessionService : NSObject <TWCTwitterSessionServiceInterface>
+
+-(id) init  __unavailable;
++(id) new   __unavailable;
+
+-(id) initWithSDK: (Twitter *) sdkInstance defaultsStorage: (NSUserDefaults *) storage;
 
 @end

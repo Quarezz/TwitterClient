@@ -1,5 +1,6 @@
 PODS:
   - Fabric (1.6.13)
+  - Reachability (3.2)
   - ReactiveCocoa (2.5):
     - ReactiveCocoa/UI (= 2.5)
   - ReactiveCocoa/Core (2.5):
@@ -13,15 +14,17 @@ PODS:
     - TwitterCore (>= 2.8)
 
 DEPENDENCIES:
+  - Reachability
   - ReactiveCocoa (~> 2.5)
   - TwitterKit
 
 SPEC CHECKSUMS:
   Fabric: 2fb5676bc811af011a04513451f463dac6803206
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   ReactiveCocoa: e2db045570aa97c695e7aa97c2bcab222ae51f4a
   TwitterCore: e959987be23c767004d29eb7fab8d85d8585a2e5
   TwitterKit: 3b6044a7320340326a4098f3e37aa1dbaeb94942
 
-PODFILE CHECKSUM: a51477e61d60567a1df810b06d680d945b5b2552
+PODFILE CHECKSUM: 7393e687696b10911fcd2c4f609dc81a1bedf1b7
 
 COCOAPODS: 1.3.1
