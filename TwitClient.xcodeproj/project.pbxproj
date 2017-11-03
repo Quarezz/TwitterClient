@@ -608,6 +608,7 @@
 			baseConfigurationReference = F10D36181123F4AD778A68FD /* Pods-TwitClient.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NX56283KF9;
 				INFOPLIST_FILE = TwitClient/Info.plist;
@@ -624,6 +625,7 @@
 			baseConfigurationReference = 210105D23790798D9C84D31A /* Pods-TwitClient.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NX56283KF9;
 				INFOPLIST_FILE = TwitClient/Info.plist;
