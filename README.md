@@ -1,4 +1,5 @@
 # TwitterClient
+App build using Xcode9 + cocoapods1.3.1
 
 ## Notes:
 * SDK
