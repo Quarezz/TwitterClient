@@ -10,6 +10,7 @@
 #import "TWCFeedViewModel.h"
 #import "TWCPostCell.h"
 #import "TWCUser.h"
+#import "TWCTwitterFlowCoordinator.h"
 #import <ReactiveCocoa/ReactiveCocoa.h>
 
 @interface TWCFeedTableViewController ()
@@ -32,7 +33,7 @@
     {
         self.loginButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.login", nil) style:UIBarButtonItemStylePlain target:nil  action:nil];
         self.logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.logout", nil) style:UIBarButtonItemStylePlain target:nil  action:nil];
-        self.postButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.post", nil) style:UIBarButtonItemStylePlain target:nil action:nil];
+        self.postButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"feed.actions.post", nil) style:UIBarButtonItemStylePlain target:self action:@selector(tappedPost)];
         
         self.refreshControl = [UIRefreshControl new];
         
@@ -67,7 +68,6 @@
     self.refreshControl.rac_command = self.viewModel.refreshCommand;
     self.loginButton.rac_command = self.viewModel.loginCommand;
     self.logoutButton.rac_command = self.viewModel.logoutCommand;
-    self.postButton.rac_command = self.viewModel.postCommand;
     
     // Macro bindings
     
@@ -115,7 +115,17 @@
     }];
 }
 
+-(void) updatePosts
+{
+    [self.viewModel.refreshCommand execute:nil];
+}
+
 #pragma mark - Private methods
+
+-(void) tappedPost
+{
+    [self.coordinator navigateToComposerWithUserId:self.viewModel.user.identifier];
+}
 
 -(void) showError: (NSString *) reason
 {

@@ -9,9 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @class TWCFeedViewModel;
+@class TWCTwitterFlowCoordinator;
 
 @interface TWCFeedTableViewController : UITableViewController
 
+@property (nonatomic, strong) TWCTwitterFlowCoordinator *coordinator;
+
 -(void) bindModel: (TWCFeedViewModel *) viewModel;
+-(void) updatePosts;
 
 @end

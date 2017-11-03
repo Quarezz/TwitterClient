@@ -87,7 +87,7 @@ describe(@"When using SessionService", ^{
         
         beforeEach(^{
             
-            [[sdk should] receive:@selector(logInWithCompletion:)];
+            [[sdk should] receive:@selector(logInWithMethods:completion:)];
             
             [[session should] receive:@selector(userID) andReturn:@"foo"];
             [[session should] receive:@selector(userName) andReturn:@"bar"];
@@ -100,7 +100,7 @@ describe(@"When using SessionService", ^{
         
         it(@"should return user", ^{
             
-            KWCaptureSpy *spy = [sdk captureArgument:@selector(logInWithCompletion:) atIndex:0];
+            KWCaptureSpy *spy = [sdk captureArgument:@selector(logInWithMethods:completion:) atIndex:1];
             
             __block TWCUser *expectUser;
             [service loginWithCompletion:^(TWCUser *user) {
@@ -118,14 +118,14 @@ describe(@"When using SessionService", ^{
         
         beforeEach(^{
             
-            [[sdk should] receive:@selector(logInWithCompletion:)];
+            [[sdk should] receive:@selector(logInWithMethods:completion:)];
             
             service = [[TWCTwitterSessionService alloc] initWithSDK:sdk defaultsStorage:defaults];
         });
         
         it(@"should return error", ^{
             
-            KWCaptureSpy *spy = [sdk captureArgument:@selector(logInWithCompletion:) atIndex:0];
+            KWCaptureSpy *spy = [sdk captureArgument:@selector(logInWithMethods:completion:) atIndex:1];
             
             __block NSString *expectReason;
             [service loginWithCompletion: nil failure:^(NSString *reason) {

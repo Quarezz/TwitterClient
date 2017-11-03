@@ -19,7 +19,7 @@
         self.text = dict[@"text"];
         
         NSDateFormatter *dateFormatter = [NSDateFormatter new];
-        //Wed, 27 Aug 2008 13:08:45 +00:00
+        //Tue Oct 24 09:58:18 +0000 2017
         dateFormatter.dateFormat = @"EEE MMM dd HH:mm:ss Z yyyy";
         self.date = [dateFormatter dateFromString:dict[@"created_at"]];
         self.favouriteCount = [dict[@"favorited"] unsignedIntegerValue];

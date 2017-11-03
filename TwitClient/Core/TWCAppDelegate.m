@@ -9,7 +9,7 @@
 #import "TWCAppDelegate.h"
 #import <TwitterKit/TwitterKit.h>
 #import "TWCFeedTableViewController.h"
-#import "TWCAppFactory.h"
+#import "TWCTwitterFlowCoordinator.h"
 
 @implementation TWCAppDelegate
 
@@ -18,8 +18,10 @@
     [[Twitter sharedInstance] startWithConsumerKey:@"5AqiHOLPOMYXW9ZwEZyMFFvot"
                                     consumerSecret:@"yUOe8jcVTnN3QbPfZuC47Yw25Bw5JYiFP6vVzH8vtXM7DCUerS"];
     
+    TWCTwitterFlowCoordinator *twitterFlow = [TWCTwitterFlowCoordinator new];
+    
     UIWindow *window = [[UIWindow alloc] initWithFrame: [UIScreen mainScreen].bounds];
-    window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[TWCAppFactory createFeedModule]];
+    window.rootViewController = [twitterFlow initialViewController];
     self.window = window;
     [self.window makeKeyAndVisible];
 }

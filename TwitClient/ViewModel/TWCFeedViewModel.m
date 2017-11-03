@@ -21,7 +21,6 @@
 @property (nonatomic, strong) RACSignal *isLoggedInSignal;
 @property (nonatomic, strong) RACSignal *loginSignal;
 @property (nonatomic, strong) RACSignal *logoutSignal;
-@property (nonatomic, strong) RACSignal *postSignal;
 @property (nonatomic, strong) RACSignal *fetchSignal;
 @property (nonatomic, strong) RACSignal *localFetchSignal;
 @property (nonatomic, strong) RACSignal *reachUnsubSignal;
@@ -117,12 +116,6 @@
             return nil;
         }] logAll];
         
-        self.postSignal = [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-            @strongify(self)
-            
-            
-        }] logAll];
-        
         [[[RACObserve(self, active) ignore:@NO] take:1] subscribeNext:^(id _) {
             @strongify(self);
 
@@ -176,13 +169,6 @@
 {
     return [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
         return self.logoutSignal;
-    }];
-}
-
--(RACCommand *) postCommand
-{
-    return [[RACCommand alloc] initWithSignalBlock:^RACSignal *(id input) {
-        return self.postSignal;
     }];
 }
 

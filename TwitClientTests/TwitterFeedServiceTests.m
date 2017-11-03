@@ -10,12 +10,14 @@
 #import "TWCTwitterFeedService.h"
 #import "TWCApiClient.h"
 #import "TWCPostItem.h"
+#import "TWCPostsStorage.h"
 
 SPEC_BEGIN(TWCTwitterFeedServiceTests)
 
 describe(@"When using FeedService", ^{
     
     TWCApiClient *apiClient = [TWCApiClient mock];
+    TWCPostsStorage *storage = [TWCPostsStorage mock];
     
     __block TWCTwitterFeedService *service;
     
@@ -96,6 +98,48 @@ describe(@"When using FeedService", ^{
             
             FeedCompletion completion = spy.argument;
             completion(@[]);
+        });
+    });
+    
+    context(@"On non-empty cache fetching", ^{
+       
+        beforeAll(^{
+            
+            [[storage should] receive:@selector(fetchPosts) andReturn:@[[TWCPostItem new]]];
+            service = [[TWCTwitterFeedService alloc] initWithApiClient:apiClient storage:storage];
+        });
+        
+        it(@"should return non-empty feed", ^{
+            
+            __block NSArray<TWCPostItem *> *expectedFeed;
+            [service fetchFeedForClient:@"foo" fromCache:true withCompletion:^(NSArray<TWCPostItem *> *posts) {
+                expectedFeed = posts;
+            } failure:nil];
+            
+            [[expectedFeed shouldNotEventually] beNil];
+            [[expectedFeed shouldEventually] haveCountOf:1];
+        });
+    });
+    
+    context(@"On cache invalidation", ^{
+        
+        beforeAll(^{
+            
+            [[storage should] receive:@selector(clearPosts)];
+            [[storage should] receive:@selector(fetchPosts) andReturn:@[]];
+            service = [[TWCTwitterFeedService alloc] initWithApiClient:apiClient storage:storage];
+            [service invalidateCache];
+        });
+        
+        it(@"should fetch empty feed", ^{
+            
+            __block NSArray<TWCPostItem *> *expectedFeed;
+            [service fetchFeedForClient:@"foo" fromCache:true withCompletion:^(NSArray<TWCPostItem *> *posts) {
+                expectedFeed = posts;
+            } failure:nil];
+            
+            [[expectedFeed shouldNotEventually] beNil];
+            [[expectedFeed shouldEventually] haveCountOf:0];
         });
     });
 });
