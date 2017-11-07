@@ -1,0 +1,221 @@
+diff --git a/TwitClient/Core/TWCAppFactory.m b/TwitClient/Core/TWCAppFactory.m
+index 15f5dbc..4c39fc7 100644
+--- a/TwitClient/Core/TWCAppFactory.m
++++ b/TwitClient/Core/TWCAppFactory.m
+@@ -20,6 +20,7 @@
+ 
+ +(TWCFeedTableViewController *) createFeedModule
+ {
++#warning it's hard to read nested methods
+     TWCFeedTableViewController *vc = [[TWCFeedTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+     [vc bindModel:[[TWCFeedViewModel alloc] initWithSessionService:[[TWCTwitterSessionService alloc] initWithSDK:[Twitter sharedInstance]
+                                                                                                  defaultsStorage:[NSUserDefaults standardUserDefaults]]
+diff --git a/TwitClient/Core/TWCTwitterFlowCoordinator.m b/TwitClient/Core/TWCTwitterFlowCoordinator.m
+index 8480f22..06e80d2 100644
+--- a/TwitClient/Core/TWCTwitterFlowCoordinator.m
++++ b/TwitClient/Core/TWCTwitterFlowCoordinator.m
+@@ -22,6 +22,7 @@
+ 
+ #pragma mark - Initialization
+ 
++#warning empty initializer
+ -(id) init
+ {
+     if (self = [super init])
+diff --git a/TwitClient/Models/TWCPostItem.m b/TwitClient/Models/TWCPostItem.m
+index 975eb9e..3dc81c7 100644
+--- a/TwitClient/Models/TWCPostItem.m
++++ b/TwitClient/Models/TWCPostItem.m
+@@ -17,7 +17,7 @@
+     {
+         self.identifier = [dict[@"id"] stringValue];
+         self.text = dict[@"text"];
+-        
++#warning `NSDateFormatter` is heavy object to initialize each time
+         NSDateFormatter *dateFormatter = [NSDateFormatter new];
+         //Tue Oct 24 09:58:18 +0000 2017
+         dateFormatter.dateFormat = @"EEE MMM dd HH:mm:ss Z yyyy";
+diff --git a/TwitClient/Network/TWCApiClient.h b/TwitClient/Network/TWCApiClient.h
+index dc36637..d2f8bce 100644
+--- a/TwitClient/Network/TWCApiClient.h
++++ b/TwitClient/Network/TWCApiClient.h
+@@ -12,7 +12,7 @@
+ @class TWTRAPIClient;
+ 
+ @interface TWCApiClient : NSObject
+-
++#warning TWTRAPIClient can be passed during initialization
+ -(void) fetchFeedForTwitterClient: (TWTRAPIClient *) twitterClient completion:(FeedCompletion)completion failure:(FeedFailure)failure;
+ 
+ @end
+diff --git a/TwitClient/Network/TWCApiClient.m b/TwitClient/Network/TWCApiClient.m
+index 48d02e6..715c70d 100644
+--- a/TwitClient/Network/TWCApiClient.m
++++ b/TwitClient/Network/TWCApiClient.m
+@@ -17,6 +17,7 @@ static NSString *kPageLimit = @"20";
+ 
+ -(void) fetchFeedForTwitterClient:(TWTRAPIClient *)twitterClient completion:(FeedCompletion)completion failure:(FeedFailure)failure
+ {
++#warning this method can be segregated into smallest and simplest like request creation, date Parsing, safe callbacks calling
+     NSError *requestError = nil;
+     NSURLRequest *request = [twitterClient URLRequestWithMethod:@"GET"
+                                                                     URL:kFeedUrl
+@@ -34,6 +35,7 @@ static NSString *kPageLimit = @"20";
+                                                                                    NSError * _Nullable connectionError) {
+         if (connectionError != nil)
+         {
++#warning no `nil` checks before calling `completion` and `failure`
+             failure(connectionError.localizedDescription);
+             return;
+         }
+@@ -42,6 +44,7 @@ static NSString *kPageLimit = @"20";
+         NSArray *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parsingError];
+         if (parsingError != nil || [jsonData isKindOfClass:[NSArray class]] == NO)
+         {
++            #warning it is hard to implement proper error handling/logging with a plain string only.
+             failure(NSLocalizedString(@"web.parsing.error", nil));
+             return;
+         }
+diff --git a/TwitClient/Services/TWCTwitterFeedService.m b/TwitClient/Services/TWCTwitterFeedService.m
+index 95aeed6..69520a7 100644
+--- a/TwitClient/Services/TWCTwitterFeedService.m
++++ b/TwitClient/Services/TWCTwitterFeedService.m
+@@ -43,6 +43,8 @@
+     else
+     {
+         __weak typeof(self) weakSelf = self;
++#warning Not sure whether we need to create a new instance of TWTRAPIClient each time\
++        Also it (TWTRAPIClient) could be an internal/private dependency of `TWCApiClient` hidden from `TWCTwitterFeedService`
+         [self.apiClient fetchFeedForTwitterClient:[[TWTRAPIClient alloc] initWithUserID:userId] completion:^(NSArray<TWCPostItem *> *posts) {
+             __strong typeof(self) strongSelf = weakSelf;
+             
+diff --git a/TwitClient/Services/TWCTwitterFeedServiceInterface.h b/TwitClient/Services/TWCTwitterFeedServiceInterface.h
+index e0bb380..c195b0b 100644
+--- a/TwitClient/Services/TWCTwitterFeedServiceInterface.h
++++ b/TwitClient/Services/TWCTwitterFeedServiceInterface.h
+@@ -9,11 +9,13 @@
+ @class TWCPostItem;
+ 
+ typedef void (^FeedCompletion)(NSArray<TWCPostItem *> *posts);
++#warning NSError is more expectable way to represent a failure case
+ typedef void (^FeedFailure)(NSString *reason);
+ 
+ @protocol TWCTwitterFeedServiceInterface
+ 
+ -(void) fetchFeedForClient: (NSString *) userId
++#warning cache policy as a separate instance property can simplify this method
+                  fromCache: (BOOL) fromCache
+             withCompletion: (FeedCompletion) completion
+                    failure: (FeedFailure) failure;
+diff --git a/TwitClient/Storage/TWCPostsStorage.m b/TwitClient/Storage/TWCPostsStorage.m
+index 14e1378..0c2e6f6 100644
+--- a/TwitClient/Storage/TWCPostsStorage.m
++++ b/TwitClient/Storage/TWCPostsStorage.m
+@@ -58,7 +58,7 @@ static NSString *kEntityName = @"TWCPostStorageItem";
+ {
+     NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+     context.persistentStoreCoordinator = self.storeCoordinator;
+-    
++#warning here CoreData is used as a file storage
+     [self clearPosts];
+     
+     [posts enumerateObjectsUsingBlock:^(TWCPostItem * _Nonnull post, NSUInteger idx, BOOL * _Nonnull stop) {
+@@ -74,7 +74,9 @@ static NSString *kEntityName = @"TWCPostStorageItem";
+     
+     [context save:nil];
+ }
+-
++#warning no error handling for post fetching
++#warning ignoring core data concurrency conventions (operating with private context objects on main thread)
++#warning duplicated code in -fetchPosts and -clearPosts
+ -(NSArray<TWCPostItem *> *) fetchPosts
+ {
+     NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+diff --git a/TwitClient/Utils/Categories/NSError+Convenience.m b/TwitClient/Utils/Categories/NSError+Convenience.m
+index a78bcd0..511f936 100644
+--- a/TwitClient/Utils/Categories/NSError+Convenience.m
++++ b/TwitClient/Utils/Categories/NSError+Convenience.m
+@@ -10,6 +10,12 @@
+ 
+ @implementation NSError (Convenience)
+ 
++#warning \
++- implicit return type, it should `NSError *` or `instancetype`. \
++- domain should be publicly accessible \
++- No error codes \
++- No `nil` check on `string` parameter it will crash with `nil` value
++
+ +(id) errorWithString:(NSString *)string
+ {
+     return [NSError errorWithDomain:@"twitclient.convenience" code:0 userInfo:@{NSLocalizedDescriptionKey: string}];
+diff --git a/TwitClient/View/Cells/TWCPostCell.m b/TwitClient/View/Cells/TWCPostCell.m
+index 39b87a9..2e6e707 100644
+--- a/TwitClient/View/Cells/TWCPostCell.m
++++ b/TwitClient/View/Cells/TWCPostCell.m
+@@ -26,6 +26,7 @@
+     self.nameLabel.text = data.authorName;
+     self.nicknameLabel.text = [NSString stringWithFormat:@"@%@",data.authorScreenName];
+     
++#warning date formatter 
+     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+     formatter.dateFormat = @"MMM dd HH:mm";
+     self.dateLabel.text = [formatter stringFromDate:data.date];
+diff --git a/TwitClient/View/ViewControllers/TWCFeedTableViewController.m b/TwitClient/View/ViewControllers/TWCFeedTableViewController.m
+index 6751d19..80fa364 100644
+--- a/TwitClient/View/ViewControllers/TWCFeedTableViewController.m
++++ b/TwitClient/View/ViewControllers/TWCFeedTableViewController.m
+@@ -37,6 +37,7 @@
+         
+         self.refreshControl = [UIRefreshControl new];
+         
++#warning string literals are used for class names and reuse identifiers
+         [self.tableView registerNib:[UINib nibWithNibName:@"TweetPostCell" bundle:nil] forCellReuseIdentifier:@"TWCPostCell"];
+         self.tableView.allowsSelection = NO;
+     }
+@@ -84,6 +85,8 @@
+         [self.viewModel.connectionCheckBreakCommand execute:nil];
+     }];
+     
++    
++#warning ReactiveCocoa is used against reactive programming conventions (in some places shared state is used in -subscribeNext: instead of using next value.
+     [[RACObserve(self, viewModel.error) deliverOnMainThread] subscribeNext:^(id x) {
+         @strongify(self)
+         
+@@ -158,4 +161,6 @@
+     return cell;
+ }
+ 
++#warning TWCFeedTableViewController has too many responsibilities.
++
+ @end
+diff --git a/TwitClient/ViewModel/TWCFeedViewModel.h b/TwitClient/ViewModel/TWCFeedViewModel.h
+index 72a074c..eaa67d8 100644
+--- a/TwitClient/ViewModel/TWCFeedViewModel.h
++++ b/TwitClient/ViewModel/TWCFeedViewModel.h
+@@ -20,6 +20,8 @@
+ 
+ @property (nonatomic, assign) BOOL active;
+ @property (nonatomic, assign) BOOL connectionAvailable;
++
++#warning Error is stored as state despite the fact that it should be transient. Better to use combination of RACCommand error signals.
+ @property (nonatomic, copy) NSError *error;
+ 
+ @property (nonatomic, strong, readonly) RACCommand *loginCommand;
+diff --git a/TwitClient/ViewModel/TWCFeedViewModel.m b/TwitClient/ViewModel/TWCFeedViewModel.m
+index abc641e..77fc64b 100644
+--- a/TwitClient/ViewModel/TWCFeedViewModel.m
++++ b/TwitClient/ViewModel/TWCFeedViewModel.m
+@@ -13,6 +13,13 @@
+ #import "TWCPostItem.h"
+ #import "TWCUser.h"
+ 
++#warning View model has odd responsibilities: \
++1. Reactive adapter for service layer \
++2. Mediation between multiple services that handle single business logic. (better to extract separate mediator for this)\
++
++# warning Violation of DI principle (self.reachability = [Reachability reachabilityForInternetConnection];)
++# warning Lots of side effects in reactive code which is against RX principles.
++
+ @interface TWCFeedViewModel()
+ 
+ @property (nonatomic, strong) id<TWCTwitterFeedServiceInterface> feedService;
